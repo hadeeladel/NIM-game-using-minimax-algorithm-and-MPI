@@ -5,7 +5,6 @@
 #include <iomanip>
 #include <mpi.h>
 
-/// user plays first
 using namespace std;
 struct node;
 node* createNode(vector<int>,int);
@@ -23,7 +22,7 @@ int myrank,nproc;
 vector<int>pile{3,4,5};
 
 vector<node*> leafs;
-node*root=createNode(pile,0);//playerA
+node*root=createNode(pile,0);
 struct node{
 vector<int>state;
 //int player;
@@ -115,10 +114,10 @@ level=0;
             n--;
         }
     level++;
-        cout << endl; // Print new line between two levels
+        cout << endl; 
 
     }
-//reverse(begin(answer), end(answer));
+
 total__levels=level;
 }
 void print_tree(node* root){
@@ -157,19 +156,8 @@ for(int j=myrank;j<(aroot->child.size());j+=nproc){
 
 
          MPI_Allreduce(&maxiloc,&maxi,1,MPI_2INT,MPI_MAXLOC,MPI_COMM_WORLD);
-
-        //the problem here is that each process has it's own copy so the rank who make change on the maxi value only he can see that change and all other
-        //process see the maxi unchanged
-        // asolustion coould be by sending the value of all the nodes to the master and he calculate the max of them
-        //MPI_Barrier(MPI_COMM_WORLD);
-        //reduce will return the max of all the children node and the location of that max
-        //so the next move for the computer will be to go to that max node
         MPI_Barrier(MPI_COMM_WORLD);
-  //      if(myrank==0){
-            //cout<<"maxi value"<<maxi[0]<<"maxi node "<<maxi[1]<<endl;
-            //aroot->value=maxi;
         return aroot->child[maxi[1]]->state;
-//        }
 
 
 }
